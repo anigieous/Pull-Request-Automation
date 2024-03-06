@@ -54,7 +54,7 @@ runs:
         fi
       shell: bash
       env:
-        GH_TOKEN: ${{ inputs.token }}
+        GITHUB_TOKEN: ${{ inputs.token }}
         
     - name: Create label
       if: ${{ inputs.label }}
@@ -69,7 +69,7 @@ runs:
         fi
       shell: bash
       env:
-        GH_TOKEN: ${{ inputs.token }}
+        GITHUB_TOKEN: ${{ inputs.token }}
         
     - name: Attach label to pull request
       if: ${{ inputs.label }}
@@ -81,4 +81,4 @@ runs:
           -F labels[]='${{ inputs.label }}'
       shell: bash
       env:
-        GH_TOKEN: ${{ inputs.token }}
+        GITHUB_TOKEN: ${{ inputs.token }}
