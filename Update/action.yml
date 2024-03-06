@@ -1,0 +1,64 @@
+name: 'Update Pull Request'
+description: 'Update a pull request using GitHub CLI'
+inputs:
+  token:
+    description: 'GitHub token'
+    required: true
+  title:
+    description: 'New title of the pull request'
+    required: true
+  body:
+    description: 'Updated body of the pull request'
+    required: true
+  state:
+    description: 'State of the pull request'
+    required: true
+  base:
+    description: 'Base branch'
+    required: true
+  owner:
+    description: 'Owner of the repository'
+    required: true
+  repo:
+    description: 'Repository name'
+    required: true
+  pull_number:
+    description: 'Pull request number'
+    required: true
+  label:
+    description: 'Labels for the pull request'
+    required: false
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Update pull request
+      run: |
+        gh api \
+          --method PATCH \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          /repos/${{ inputs.owner }}/${{ inputs.repo }}/pulls/${{ inputs.pull_number }} \
+          -f title='${{ inputs.title }}' \
+          -f body='${{ inputs.body }}' \
+          -f state='${{ inputs.state }}' \
+          -f base='${{ inputs.base }}'
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        
+    - name: Create label
+      if: ${{ inputs.label }}
+      uses: anigieous/Label/Create@main
+      with:
+        token: ${{ inputs.token }}
+        label: ${{ inputs.label }}
+        
+    - name: Attach label to pull request
+      if: ${{ inputs.label }}
+      uses: anigieous/Label/Attach@main
+      with:
+        token: ${{ inputs.token }}
+        prID: ${{ inputs.pull_number }}
+        label: ${{ inputs.label }}
