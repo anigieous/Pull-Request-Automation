@@ -59,12 +59,14 @@ runs:
     - name: Create label
       if: ${{ inputs.label }}
       run: |
-        gh api \
-          --method POST \
-          -H "Accept: application/vnd.github+json" \
-          /repos/${{ inputs.owner }}/${{ inputs.repo }}/labels \
-          -f name='${{ inputs.label }}' \
-          -f color='ffffff'
+        if ! gh api /repos/${{ inputs.owner }}/${{ inputs.repo }}/labels/${{ inputs.label }}; then
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ inputs.owner }}/${{ inputs.repo }}/labels \
+            -f name='${{ inputs.label }}' \
+            -f color='ffffff'
+        fi
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}
