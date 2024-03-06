@@ -1,0 +1,26 @@
+name: Attach-Label
+description: "Attach Label to PR"
+inputs:
+  token:
+    required: true
+    description: "Github token"
+    default: ${{ github.token }}
+  label:
+    required: true
+    description: "Label to attach to PR id"
+  prID:
+    required: true
+    description: "PR ID to attach label to"
+    
+runs:
+  using: "composite"
+  steps:
+    
+    - name: Attach label
+      shell: bash
+      env:
+        GITHUB_TOKEN:  ${{ inputs.token }}
+      run: |
+        gh pr edit ${{ inputs.prID }} \
+          --repo ${{ github.repository }} \
+          --add-label "${{ inputs.label }}"
