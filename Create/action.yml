@@ -3,6 +3,7 @@ description: 'Create a pull request using GitHub CLI'
 inputs:
   token:
     description: 'GitHub token'
+    default: ${{ secrets.GITHUB_TOKEN }}
     required: true
   title:
     description: 'Title of the pull request'
@@ -22,6 +23,22 @@ inputs:
   repo:
     description: 'Repository name'
     required: true
+  reviewers:
+    description: 'Reviewers for the pull request, comma-separated'
+    required: false
+  assignees:
+    description: 'Assignees for the pull request, comma-separated'
+    required: false
+  label:
+    description: 'Labels for the pull request'
+    required: false
+  milestone:
+    description: 'Milestone for the pull request'
+    required: false
+  draft:
+    description: 'Whether the pull request is a draft'
+    required: false
+    default: 'false'
 runs:
   using: 'composite'
   steps:
@@ -34,5 +51,10 @@ runs:
           --body "${{ inputs.body }}" \
           --head "${{ inputs.head }}" \
           --base "${{ inputs.base }}" \
-          --repo "${{ inputs.owner }}/${{ inputs.repo }}"
+          --repo "${{ inputs.owner }}/${{ inputs.repo }}" \
+          --reviewer "${{ inputs.reviewers }}" \
+          --assignee "${{ inputs.assignees }}" \
+          --label "${{ inputs.label }}" \
+          --milestone "${{ inputs.milestone }}" \
+          --draft "${{ inputs.draft }}"
       shell: bash
