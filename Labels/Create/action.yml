@@ -1,4 +1,4 @@
-name: Create Label
+name: Create-Label
 description: "Create PR Label"
 inputs:
   token:
