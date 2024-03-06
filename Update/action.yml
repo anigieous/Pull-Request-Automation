@@ -51,17 +51,25 @@ runs:
         
     - name: Create label
       if: ${{ inputs.label }}
+      run: |
+        gh api \
+          --method POST \
+          -H "Accept: application/vnd.github+json" \
+          /repos/${{ inputs.owner }}/${{ inputs.repo }}/labels \
+          -f name='${{ inputs.label }}' \
+          -f color='ffffff'
       shell: bash
-      uses: anigieous/Label/Create@main
-      with:
-        token: ${{ inputs.token }}
-        label: ${{ inputs.label }}
+      env:
+        GH_TOKEN: ${{ inputs.token }}
         
     - name: Attach label to pull request
       if: ${{ inputs.label }}
+      run: |
+        gh api \
+          --method POST \
+          -H "Accept: application/vnd.github+json" \
+          /repos/${{ inputs.owner }}/${{ inputs.repo }}/issues/${{ inputs.pull_number }}/labels \
+          -f labels='${{ inputs.label }}'
       shell: bash
-      uses: anigieous/Label/Attach@main
-      with:
-        token: ${{ inputs.token }}
-        prID: ${{ inputs.pull_number }}
-        label: ${{ inputs.label }}
+      env:
+        GH_TOKEN: ${{ inputs.token }}
