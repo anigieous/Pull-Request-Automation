@@ -23,6 +23,7 @@ inputs:
     description: 'Repository name'
     required: true
 runs:
+  using: 'composite'
   steps:
     - name: Create Pull Request
       run: |
