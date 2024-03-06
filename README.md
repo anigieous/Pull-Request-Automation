@@ -17,14 +17,12 @@ Reusable workflows in github actions for PR Automation
 
 ## Usage for Create PR 
 > Use PAT Token!!
-```
+<!-- start usage -->
+```yaml
 jobs:
   Create_PR:
     runs-on: your_runner
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Create Pull Request
         uses: anigieous/Pull-Request-Automation/Create@main
         with:
@@ -37,11 +35,13 @@ jobs:
           repo: 'REPO_NAME'
           label: 'LAEBL'
 ```
+<!-- end usage -->
 
 
 ## Usage for Merge PR
 > Use PAT Token!!
-```
+<!-- start usage -->
+```yaml
 jobs:
   MERGE_PR:
     runs-on: your_runner
@@ -56,9 +56,11 @@ jobs:
           prBody: ${{ github.event.pull_request.body }}
           GITHUB_TOKEN: ${{ secrets.YOUR_PAT_TOKEN }}
 ```
+<!-- end usage -->
 
 ## Usage for Update PR
-```
+<!-- start usage -->
+```yaml
 jobs:
   UPDATE_PR:
     runs-on:your_runner
@@ -73,21 +75,25 @@ jobs:
           repo: 'REPO_NAME'
           pull_number: 'PR_NUMBER'
 ```
+<!-- end usage -->
 ## Usage for Create Label
-```
+<!-- start usage -->
+```yaml
 - name: Create Label
   uses: anigieous/Pull-Request-Automation/Label/Create@main
   with:
     label : LABEL
     token: ${{ YOUR_PAT_TOKEN }}
 ```
+<!-- end usage -->
 ## Usage for Attach Label
-```
+<!-- start usage -->
+```yaml
 - name: Add Fail label
   uses: anigieous/Pull-Request-Automation/Label/Attach@main
   with:
     token: ${{ YOUR_PAT_TOKEN }}
     label: LABEL
     prID: PR_NUMBER
-```   
-
+```
+<!-- end usage -->
