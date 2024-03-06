@@ -76,7 +76,7 @@ runs:
           --method POST \
           -H "Accept: application/vnd.github+json" \
           /repos/${{ inputs.owner }}/${{ inputs.repo }}/issues/${{ inputs.pull_number }}/labels \
-          -f labels='${{ inputs.label }}'
+          -F labels[]='${{ inputs.label }}'
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}
