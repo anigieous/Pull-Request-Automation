@@ -3,7 +3,6 @@ description: 'Create a pull request using GitHub CLI'
 inputs:
   token:
     description: 'GitHub token'
-    default: ${{ secrets.GITHUB_TOKEN }}
     required: true
   title:
     description: 'Title of the pull request'
