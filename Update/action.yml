@@ -36,15 +36,22 @@ runs:
       
     - name: Update pull request
       run: |
-        gh api \
-          --method PATCH \
-          -H "Accept: application/vnd.github+json" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/${{ inputs.owner }}/${{ inputs.repo }}/pulls/${{ inputs.pull_number }} \
-          -f title='${{ inputs.title }}' \
-          -f body='${{ inputs.body }}' \
-          -f state='${{ inputs.state }}' \
-          -f base='${{ inputs.base }}'
+        request=""
+        if [[ -n "${{ inputs.title }}" ]]; then
+          request+=" -f title='${{ inputs.title }}'"
+        fi
+        if [[ -n "${{ inputs.body }}" ]]; then
+          request+=" -f body='${{ inputs.body }}'"
+        fi
+        if [[ -n "${{ inputs.state }}" ]]; then
+          request+=" -f state='${{ inputs.state }}'"
+        fi
+        if [[ -n "${{ inputs.base }}" ]]; then
+          request+=" -f base='${{ inputs.base }}'"
+        fi
+        if [[ -n "$request" ]]; then
+          eval "gh api --method PATCH -H \"Accept: application/vnd.github+json\" -H \"X-GitHub-Api-Version: 2022-11-28\" /repos/${{ inputs.owner }}/${{ inputs.repo }}/pulls/${{ inputs.pull_number }} $request"
+        fi
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}
