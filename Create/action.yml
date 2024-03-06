@@ -43,12 +43,25 @@ runs:
   steps:
     - name: Create Pull Request
       run: |
+        echo "Logging in with token..."
         echo "${{ inputs.token }}" > token.txt
         gh auth login --with-token < token.txt
         DRAFT_OPTION=''
         if [ "${{ inputs.draft }}" = 'true' ]; then
           DRAFT_OPTION='--draft'
         fi
+        echo "Processing labels..."
+        LABELS="${{ inputs.label }}"
+        IFS=',' read -ra LABEL_ARRAY <<< "$LABELS"
+        for LABEL in "${LABEL_ARRAY[@]}"; do
+          echo "Checking if label $LABEL exists..."
+          EXISTS=$(gh api repos/${{ inputs.owner }}/${{ inputs.repo }}/labels/$LABEL --exit-status 2>&1 || echo 'not found')
+          if [ "$EXISTS" = "not found" ]; then
+            echo "Label $LABEL does not exist, creating it..."
+            gh api -X POST repos/${{ inputs.owner }}/${{ inputs.repo }}/labels -f name=$LABEL -f color=ffffff
+          fi
+        done
+        echo "Creating pull request..."
         gh pr create \
           --title "${{ inputs.title }}" \
           --body "${{ inputs.body }}" \
@@ -57,7 +70,7 @@ runs:
           --repo "${{ inputs.owner }}/${{ inputs.repo }}" \
           --reviewer "${{ inputs.reviewers }}" \
           --assignee "${{ inputs.assignees }}" \
-          --label "${{ inputs.label }}" \
+          --label "$LABELS" \
           --milestone "${{ inputs.milestone }}" \
           $DRAFT_OPTION
       shell: bash
